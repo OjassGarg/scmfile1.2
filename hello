@@ -1,0 +1,74 @@
+#include<iostream>
+#include<queue>
+#include<list>
+#include<vector>
+#include<stack>
+//#include<conio.h>
+
+using namespace std;
+
+class GraphRealJava
+{
+        list<int> *adj;
+        int N;
+    public:
+        GraphRealJava(int N)
+        {
+            this->N=N;
+            adj=new list<int>[N];
+
+        }
+        void addEdge(int s,int d)
+        {
+            adj[s].push_back(d);
+            //cout<<"\nPath from "<<s<<" to "<<d<<" Marked\n";
+        }
+
+
+bool findCycle(int v,vector<bool> &visited,vector<bool> &history)
+{
+    if(visited[v]==false)
+    {
+
+    visited[v]=true;
+    history[v]=true;
+    list<int>::iterator itr;
+    for(itr=adj[v].begin();itr!=adj[v].end();itr++)
+    {
+        if (history[*itr]==true)
+                return true;
+        else
+        if ( visited[*itr]==false  )
+        {
+            bool resp=findCycle(*itr, visited, history);
+                    if(resp==true)
+                        return true;
+        }
+
+
+     }
+    }
+      history[v]=false;
+        return false;
+}
+};
+int main()
+{
+ GraphRealJava g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 0);
+    g.addEdge(2, 3);
+
+    g.addEdge(3, 1);
+
+    vector<bool> visited(4,false);
+    vector<bool> history(4,false);
+    cout<<"\n\nCycle detection:\n";
+    bool resp=g.findCycle(1,visited,history);
+    if(resp==true)
+        cout<<"\nYes Cycle detected...\n\n\n";
+    else
+        cout<<"\n Noooooo\n\n\n";
+    }
